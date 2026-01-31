@@ -1,22 +1,24 @@
 :root{
-  /* Base */
   --bg: #0b0f14;
   --panel: #121821;
   --panel-2: #0f151d;
   --text: #e9eef5;
-  --muted: rgba(233,238,245,.70);
-  --muted-2: rgba(233,238,245,.45);
-  --border: rgba(255,255,255,.08);
+  --muted: rgba(233,238,245,.76);
+  --muted-2: rgba(233,238,245,.52);
+  --border: rgba(255,255,255,.09);
 
-  /* Accent (you can swap later) */
-  --accent: #b8f546; /* lime-ish like the UI sample */
-  --accent-2: #98a869; /* from palette image */
-  --danger: #ff4d4d;
+  --accent: #b8f546;
+  --accent-2: #98a869;
 
   --radius: 18px;
-  --shadow: 0 10px 30px rgba(0,0,0,.45);
+  --shadow: 0 14px 40px rgba(0,0,0,.50);
 
   --font: "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* Scale */
+  --fs-base: 17px;
+  --fs-sm: 14px;
+  --fs-xs: 12px;
 }
 
 *{ box-sizing: border-box; }
@@ -24,9 +26,11 @@ html, body { height: 100%; }
 body{
   margin: 0;
   font-family: var(--font);
-  background: radial-gradient(1200px 700px at 20% 0%, rgba(184,245,70,.10), transparent 55%),
-              radial-gradient(900px 600px at 80% 10%, rgba(53,63,161,.10), transparent 60%),
-              var(--bg);
+  font-size: var(--fs-base);
+  background:
+    radial-gradient(1200px 700px at 16% 0%, rgba(184,245,70,.11), transparent 55%),
+    radial-gradient(900px 600px at 86% 10%, rgba(53,63,161,.11), transparent 60%),
+    var(--bg);
   color: var(--text);
 }
 
@@ -34,18 +38,18 @@ a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: none; }
 
 .container-narrow{
-  max-width: 1100px;
+  max-width: 1200px;
 }
 
 .card-dark{
-  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
 .pill{
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255,255,255,.10);
   border-radius: 999px;
   padding: 10px 14px;
   color: var(--muted);
@@ -56,23 +60,163 @@ a:hover { text-decoration: none; }
   background: var(--accent);
   border: 0;
   color: #0b0f14;
-  font-weight: 700;
+  font-weight: 800;
   border-radius: 999px;
   padding: 12px 18px;
 }
-.btn-accent:hover{ filter: brightness(0.95); }
+.btn-accent:hover{ filter: brightness(0.96); }
 
 .btn-ghost{
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.11);
   color: var(--text);
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 11px 16px;
 }
-.btn-ghost:hover{ background: rgba(255,255,255,.05); }
+.btn-ghost:hover{ background: rgba(255,255,255,.06); }
 
 .hr-soft{
   border: 0;
   height: 1px;
-  background: rgba(255,255,255,.08);
+  background: rgba(255,255,255,.09);
+}
+
+.h1-hero{
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  font-size: clamp(30px, 3.2vw, 48px);
+  line-height: 1.03;
+}
+
+.h2-section{
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  font-size: clamp(20px, 2.0vw, 30px);
+}
+
+.text-muted{
+  color: var(--muted) !important;
+}
+
+.input-dark, .select-dark{
+  background: rgba(255,255,255,.03) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  color: var(--text) !important;
+}
+
+.section-gap{
+  margin-top: 28px;
+}
+
+.hover-raise{
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.hover-raise:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.14);
+}
+
+/* ===== Premium polish (non-breaking) ===== */
+
+/* Slightly smoother borders/shadows on cards */
+.card-dark{
+  border-color: rgba(255,255,255,.10);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+/* Pills: a bit tighter and more consistent */
+.pill{
+  padding: 9px 13px;
+  font-size: var(--fs-sm);
+  line-height: 1;
+}
+
+/* Better button sizing + consistent font weight */
+.btn,
+.btn-accent,
+.btn-ghost{
+  font-weight: 850;
+  letter-spacing: .1px;
+}
+
+/* Make small buttons look better (Bootstrap btn-sm sometimes feels tiny) */
+.btn-sm{
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+}
+
+/* Inputs: better focus state (this is a “premium” cue) */
+.input-dark:focus,
+.select-dark:focus{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(184,245,70,.18) !important;
+  border-color: rgba(184,245,70,.35) !important;
+}
+
+/* Links/buttons focus for keyboard (professional detail) */
+a:focus-visible,
+button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(184,245,70,.18);
+  border-radius: 12px;
+}
+
+/* Better section spacing on large screens */
+.section-gap{
+  margin-top: 30px;
+}
+@media (min-width: 992px){
+  .section-gap{ margin-top: 36px; }
+}
+
+/* More breathing room on big screens */
+@media (min-width: 992px){
+  .container-narrow{ max-width: 1240px; }
+}
+@media (min-width: 1400px){
+  .container-narrow{ max-width: 1320px; }
+}
+
+
+@media (prefers-reduced-motion: reduce){
+  .hover-raise{ transition: none; }
+  .hover-raise:hover{ transform: none; }
+}
+
+/* ===== Accordion theme (Bootstrap) ===== */
+.accordion-item{
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+}
+
+.accordion-button{
+  background: rgba(255,255,255,.02) !important;
+  color: var(--text) !important;
+  font-weight: 900;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 14px 16px;
+}
+
+.accordion-button.collapsed{
+  background: rgba(255,255,255,.02) !important;
+}
+
+.accordion-button:not(.collapsed){
+  background: rgba(255,255,255,.035) !important;
+  color: var(--text) !important;
+}
+
+.accordion-button::after{
+  filter: invert(1);
+  opacity: .85;
+}
+
+.accordion-body{
+  background: rgba(255,255,255,.01);
+  border-top: 1px solid rgba(255,255,255,.08);
 }

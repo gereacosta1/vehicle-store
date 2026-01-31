@@ -1,110 +1,153 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import inventory from "../data/inventory.sample.json";
 import { formatUSD } from "../lib/money";
 import { isAffirmReady } from "../lib/affirm";
+import VehicleGrid from "../components/VehicleGrid";
+
+function spec(label, value) {
+  return (
+    <div className="pill d-flex justify-content-between" style={{ gap: 12 }}>
+      <span className="text-muted" style={{ fontSize: 13 }}>{label}</span>
+      <span style={{ fontWeight: 800 }}>{value}</span>
+    </div>
+  );
+}
 
 export default function VehicleDetails({ i18n }) {
   const { id } = useParams();
-  const vehicle = useMemo(
-    () => (inventory.vehicles || []).find(v => v.id === id),
-    [id]
-  );
 
-  const [msg, setMsg] = useState("");
+  const vehicle = useMemo(() => {
+    return (inventory.vehicles || []).find(v => v.id === id);
+  }, [id]);
+
+  const similar = useMemo(() => {
+    if (!vehicle) return [];
+    return (inventory.vehicles || [])
+      .filter(v => v.id !== vehicle.id && v.type === vehicle.type)
+      .slice(0, 6);
+  }, [vehicle]);
 
   if (!vehicle) {
     return (
-      <div className="container container-narrow py-5">
+      <div className="container container-narrow py-4">
         <div className="card-dark p-4">
-          <div style={{ fontWeight: 800 }}>Not found</div>
-          <div className="mt-2">
-            <Link to="/inventory" className="btn btn-ghost">Back</Link>
-          </div>
+          <h2 className="h2-section mb-2">Not found</h2>
+          <div className="text-muted mb-3">This vehicle does not exist.</div>
+          <Link className="btn btn-ghost" to="/inventory">Back to inventory</Link>
         </div>
       </div>
     );
   }
 
-  const img = vehicle.images?.[0];
-  const ready = isAffirmReady();
+  const img = (vehicle.images && vehicle.images[0]) || "";
 
-  const onBuy = () => {
-    // Placeholder until we implement real checkout creation + authorize/capture
-    if (!ready) {
-      setMsg(i18n.lang === "es"
-        ? "Affirm todavía no está configurado (faltan claves)."
-        : "Affirm is not configured yet (missing keys)."
-      );
-      return;
-    }
-    setMsg(i18n.lang === "es"
-      ? "Listo para integrar checkout real de Affirm (siguiente paso)."
-      : "Ready to wire real Affirm checkout (next step)."
-    );
-  };
+  const ready = isAffirmReady();
 
   return (
     <div className="container container-narrow py-4">
-      <div className="mb-3">
-        <Link to="/inventory" className="pill">← {i18n.t("nav.inventory")}</Link>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <Link to="/inventory" className="pill">← Inventory</Link>
+        <div className="text-muted" style={{ fontSize: 13 }}>
+          {i18n.lang === "es" ? "Sujeto a aprobación. Los términos varían." : "Subject to approval. Terms vary."}
+        </div>
       </div>
 
       <div className="row g-3">
+        {/* Left: image */}
         <div className="col-12 col-lg-7">
           <div className="card-dark p-3">
-            {img ? (
-              <img
-                src={img}
-                alt={vehicle.title}
-                style={{ width: "100%", height: 420, objectFit: "cover", borderRadius: 14 }}
-              />
-            ) : (
-              <div style={{ height: 420 }} />
-            )}
+            <div
+              style={{
+                borderRadius: 16,
+                overflow: "hidden",
+                border: "1px solid rgba(255,255,255,.10)"
+              }}
+            >
+              {img ? (
+                <img
+                  src={img}
+                  alt={vehicle.title}
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                  loading="lazy"
+                />
+              ) : (
+                <div style={{ aspectRatio: "16/10", background: "rgba(255,255,255,.03)" }} />
+              )}
+            </div>
+
+            <div className="d-flex flex-wrap gap-2 mt-3">
+              <div className="pill">{vehicle.type}</div>
+              <div className="pill">{vehicle.year}</div>
+              <div className="pill">{vehicle.location}</div>
+              <div className="pill">{Number(vehicle.mileage || 0).toLocaleString("en-US")} mi</div>
+            </div>
           </div>
         </div>
 
+        {/* Right: details */}
         <div className="col-12 col-lg-5">
-          <div className="card-dark p-4">
-            <div style={{ color: "var(--muted-2)", marginBottom: 6 }}>
-              {vehicle.year} • {vehicle.location}
+          <div className="card-dark p-4 h-100">
+            <div className="text-muted" style={{ fontSize: 13 }}>
+              {vehicle.year} · {vehicle.location}
             </div>
-            <h1 style={{ fontWeight: 900, marginBottom: 10 }}>{vehicle.title}</h1>
 
-            <div className="d-flex align-items-center justify-content-between mb-3">
-              <div className="pill">{vehicle.type}</div>
-              <div style={{ fontWeight: 900, fontSize: 28, color: "var(--accent)" }}>
+            <h1 className="h2-section" style={{ fontSize: "clamp(22px, 2.2vw, 34px)", marginTop: 6 }}>
+              {vehicle.title}
+            </h1>
+
+            <div className="d-flex align-items-center justify-content-between mt-3">
+              <div className="pill" style={{ textTransform: "capitalize" }}>{vehicle.type}</div>
+              <div style={{ color: "var(--accent)", fontWeight: 900, fontSize: 22 }}>
                 {formatUSD(vehicle.priceUsd)}
               </div>
             </div>
 
-            <div style={{ color: "var(--muted)", marginBottom: 14 }}>
-              {vehicle.description}
+            <div className="text-muted mt-3" style={{ fontSize: 14 }}>
+              {vehicle.description || (i18n.lang === "es" ? "Detalles disponibles pronto." : "Details coming soon.")}
             </div>
 
-            <div className="d-grid gap-2">
-              <button
-                className="btn btn-accent"
-                onClick={onBuy}
-                disabled={!ready}
-                title={!ready ? "Need Affirm keys/config first" : ""}
-              >
-                {i18n.t("vehicle.buy")}
+            <hr className="hr-soft my-4" />
+
+            <div className="d-flex flex-column gap-2">
+              {spec(i18n.lang === "es" ? "Año" : "Year", String(vehicle.year))}
+              {spec(i18n.lang === "es" ? "Ubicación" : "Location", vehicle.location)}
+              {spec(i18n.lang === "es" ? "Kilometraje" : "Mileage", `${Number(vehicle.mileage || 0).toLocaleString("en-US")} mi`)}
+              {spec(i18n.lang === "es" ? "Precio" : "Price", formatUSD(vehicle.priceUsd))}
+            </div>
+
+            <div className="mt-4 d-grid gap-2">
+              <button className="btn btn-accent" disabled={!ready}>
+                Buy with Affirm
               </button>
-              <div style={{ color: "var(--muted-2)", fontSize: 13 }}>
-                {i18n.t("vehicle.disclaimer")}
-              </div>
+              <button className="btn btn-ghost">
+                {i18n.lang === "es" ? "Schedule a viewing" : "Schedule a viewing"}
+              </button>
             </div>
 
-            {msg ? (
-              <div className="mt-3 pill" style={{ color: "var(--text)" }}>
-                {msg}
+            {!ready && (
+              <div className="text-muted mt-2" style={{ fontSize: 12 }}>
+                Affirm is not loaded yet (keys/snippet not configured).
               </div>
-            ) : null}
+            )}
+
+            <div className="text-muted mt-3" style={{ fontSize: 12 }}>
+              {i18n.lang === "es"
+                ? "Este listado es demostración. Luego lo ajustamos con info real del dealer."
+                : "Demo listing. We’ll finalize with the dealer’s real info."}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Similar */}
+      <section className="section-gap">
+        <div className="d-flex align-items-end justify-content-between mb-3">
+          <h2 className="h2-section m-0">{i18n.lang === "es" ? "Similares" : "Similar vehicles"}</h2>
+          <Link className="pill" to="/inventory">Browse all</Link>
+        </div>
+        <VehicleGrid vehicles={similar} />
+      </section>
     </div>
   );
 }

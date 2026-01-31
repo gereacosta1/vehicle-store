@@ -9,33 +9,50 @@ export default function FiltersBar({
   sort,
   onSort
 }) {
+  const hasAny = Boolean(search.trim()) || type !== "all" || sort !== "priceLow";
+
+  const clear = () => {
+    onSearch("");
+    onType("all");
+    onSort("priceLow");
+  };
+
   return (
     <div className="card-dark p-3">
       <div className="row g-2 align-items-center">
+        {/* Search */}
         <div className="col-12 col-md-5">
-          <input
-            className="form-control"
-            value={search}
-            onChange={(e) => onSearch(e.target.value)}
-            placeholder={`${i18n.t("filters.search")}...`}
-            style={{
-              background: "rgba(255,255,255,.03)",
-              border: "1px solid rgba(255,255,255,.10)",
-              color: "var(--text)"
-            }}
-          />
+          <div style={{ position: "relative" }}>
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "var(--muted-2)",
+                fontSize: 14
+              }}
+            >
+              ⌕
+            </span>
+
+            <input
+              className="form-control input-dark"
+              value={search}
+              onChange={(e) => onSearch(e.target.value)}
+              placeholder={`${i18n.t("filters.search")}...`}
+              style={{ paddingLeft: 34 }}
+            />
+          </div>
         </div>
 
+        {/* Type */}
         <div className="col-6 col-md-3">
           <select
-            className="form-select"
+            className="form-select select-dark"
             value={type}
             onChange={(e) => onType(e.target.value)}
-            style={{
-              background: "rgba(255,255,255,.03)",
-              border: "1px solid rgba(255,255,255,.10)",
-              color: "var(--text)"
-            }}
           >
             <option value="all">{i18n.t("filters.all")}</option>
             <option value="car">{i18n.t("filters.car")}</option>
@@ -43,22 +60,24 @@ export default function FiltersBar({
           </select>
         </div>
 
-        <div className="col-6 col-md-4">
+        {/* Sort */}
+        <div className="col-6 col-md-4 d-flex gap-2">
           <select
-            className="form-select"
+            className="form-select select-dark"
             value={sort}
             onChange={(e) => onSort(e.target.value)}
-            style={{
-              background: "rgba(255,255,255,.03)",
-              border: "1px solid rgba(255,255,255,.10)",
-              color: "var(--text)"
-            }}
           >
             <option value="priceLow">{i18n.t("filters.priceLow")}</option>
             <option value="priceHigh">{i18n.t("filters.priceHigh")}</option>
             <option value="yearNew">{i18n.t("filters.yearNew")}</option>
             <option value="yearOld">{i18n.t("filters.yearOld")}</option>
           </select>
+
+          {hasAny && (
+            <button type="button" className="btn btn-ghost" onClick={clear}>
+              {i18n.lang === "es" ? "Limpiar" : "Clear"}
+            </button>
+          )}
         </div>
       </div>
     </div>
