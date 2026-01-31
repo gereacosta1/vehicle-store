@@ -1,0 +1,44 @@
+{
+  "featuredIds": ["veh-001", "veh-003"],
+  "vehicles": [
+    {
+      "id": "veh-001",
+      "type": "car",
+      "title": "2019 Tesla Model 3",
+      "priceUsd": 28900,
+      "year": 2019,
+      "mileage": 42000,
+      "location": "Miami, FL",
+      "images": [
+        "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1600&q=80"
+      ],
+      "description": "Clean title. Great condition. Fast delivery scheduling."
+    },
+    {
+      "id": "veh-002",
+      "type": "car",
+      "title": "2018 Volvo XC60",
+      "priceUsd": 21900,
+      "year": 2018,
+      "mileage": 61000,
+      "location": "Miami, FL",
+      "images": [
+        "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1600&q=80"
+      ],
+      "description": "Comfort + safety. Well maintained."
+    },
+    {
+      "id": "veh-003",
+      "type": "motorcycle",
+      "title": "2021 Yamaha MT-07",
+      "priceUsd": 6990,
+      "year": 2021,
+      "mileage": 7800,
+      "location": "Miami, FL",
+      "images": [
+        "https://images.unsplash.com/photo-1612197522101-4f1a1e2c0d5c?auto=format&fit=crop&w=1600&q=80"
+      ],
+      "description": "Perfect city bike. Ready to ride."
+    }
+  ]
+}
