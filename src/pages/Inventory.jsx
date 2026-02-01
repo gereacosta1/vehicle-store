@@ -125,7 +125,7 @@ export default function Inventory({ i18n }) {
 
       {/* Results */}
       <div className="mt-3">
-        <VehicleGrid vehicles={vehicles} />
+        <VehicleGrid vehicles={vehicles} i18n={i18n} />
       </div>
     </div>
   );

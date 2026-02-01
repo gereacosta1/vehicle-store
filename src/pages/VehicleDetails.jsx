@@ -4,6 +4,7 @@ import inventory from "../data/inventory.sample.json";
 import { formatUSD } from "../lib/money";
 import { isAffirmReady } from "../lib/affirm";
 import VehicleGrid from "../components/VehicleGrid";
+import { useCart } from "../cart/CartContext";
 
 function spec(label, value) {
   return (
@@ -16,6 +17,7 @@ function spec(label, value) {
 
 export default function VehicleDetails({ i18n }) {
   const { id } = useParams();
+  const { addItem } = useCart();
 
   const vehicle = useMemo(() => {
     return (inventory.vehicles || []).find(v => v.id === id);
@@ -41,8 +43,25 @@ export default function VehicleDetails({ i18n }) {
   }
 
   const img = (vehicle.images && vehicle.images[0]) || "";
-
   const ready = isAffirmReady();
+
+  const addLabel = i18n.lang === "es" ? "Agregar al carrito" : "Add to cart";
+  const scheduleLabel = i18n.lang === "es" ? "Agendar visita" : "Schedule a viewing";
+
+  const onAdd = () => {
+    addItem(
+      {
+        id: vehicle.id,
+        title: vehicle.title,
+        priceUsd: vehicle.priceUsd,
+        image: img || "",
+        year: vehicle.year,
+        location: vehicle.location,
+        type: vehicle.type
+      },
+      1
+    );
+  };
 
   return (
     <div className="container container-narrow py-4">
@@ -117,11 +136,16 @@ export default function VehicleDetails({ i18n }) {
             </div>
 
             <div className="mt-4 d-grid gap-2">
+              <button className="btn btn-ghost" onClick={onAdd}>
+                {addLabel}
+              </button>
+
               <button className="btn btn-accent" disabled={!ready}>
                 Buy with Affirm
               </button>
+
               <button className="btn btn-ghost">
-                {i18n.lang === "es" ? "Schedule a viewing" : "Schedule a viewing"}
+                {scheduleLabel}
               </button>
             </div>
 
@@ -146,7 +170,7 @@ export default function VehicleDetails({ i18n }) {
           <h2 className="h2-section m-0">{i18n.lang === "es" ? "Similares" : "Similar vehicles"}</h2>
           <Link className="pill" to="/inventory">Browse all</Link>
         </div>
-        <VehicleGrid vehicles={similar} />
+        <VehicleGrid vehicles={similar} i18n={i18n} />
       </section>
     </div>
   );

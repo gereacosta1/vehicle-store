@@ -1,13 +1,18 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import LanguageToggle from "./LanguageToggle";
+import { useCart } from "../cart/CartContext";
 
 export default function Navbar({ i18n }) {
+  const { totalQty } = useCart();
+
   const linkStyle = ({ isActive }) => ({
     color: isActive ? "var(--text)" : "var(--muted)",
     background: isActive ? "rgba(255,255,255,.04)" : "rgba(255,255,255,.02)",
     borderColor: isActive ? "rgba(255,255,255,.12)" : "rgba(255,255,255,.08)"
   });
+
+  const cartLabel = i18n.lang === "es" ? "Carrito" : "Cart";
 
   return (
     <header
@@ -57,6 +62,32 @@ export default function Navbar({ i18n }) {
         </nav>
 
         <div className="d-flex align-items-center gap-2">
+          <NavLink
+            to="/cart"
+            className="pill"
+            style={({ isActive }) => ({
+              ...linkStyle({ isActive }),
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10
+            })}
+          >
+            <span>{cartLabel}</span>
+            <span
+              className="pill"
+              style={{
+                padding: "6px 10px",
+                fontSize: 12,
+                lineHeight: 1,
+                background: totalQty ? "rgba(184,245,70,.14)" : "rgba(255,255,255,.03)",
+                borderColor: totalQty ? "rgba(184,245,70,.25)" : "rgba(255,255,255,.10)",
+                color: "var(--text)"
+              }}
+            >
+              {totalQty || 0}
+            </span>
+          </NavLink>
+
           <LanguageToggle lang={i18n.lang} onChange={i18n.setLang} />
         </div>
       </div>

@@ -1,10 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { formatUSD } from "../lib/money";
+import { useCart } from "../cart/CartContext";
 
-export default function VehicleCard({ vehicle }) {
+export default function VehicleCard({ vehicle, i18n }) {
+  const { addItem } = useCart();
+
   const img = vehicle.images?.[0];
   const isFeatured = Boolean(vehicle.featured);
+
+  const addLabel = i18n?.lang === "es" ? "Agregar" : "Add to cart";
+  const detailsLabel = i18n?.lang === "es" ? "Ver detalles" : "View details";
+
+  const onAdd = () => {
+    addItem(
+      {
+        id: vehicle.id,
+        title: vehicle.title,
+        priceUsd: vehicle.priceUsd,
+        image: img || "",
+        year: vehicle.year,
+        location: vehicle.location,
+        type: vehicle.type
+      },
+      1
+    );
+  };
 
   return (
     <div className="card-dark p-3 h-100 hover-raise">
@@ -85,18 +106,22 @@ export default function VehicleCard({ vehicle }) {
       </div>
 
       <div className="mt-3 d-flex flex-column gap-2">
-        <div style={{ fontWeight: 900, letterSpacing: "-.2px" }}>
-          {vehicle.title}
-        </div>
+        <div style={{ fontWeight: 900, letterSpacing: "-.2px" }}>{vehicle.title}</div>
 
         <div className="d-flex justify-content-between align-items-center">
           <div className="text-muted" style={{ fontSize: 13 }}>
             {vehicle.mileage ? `${Number(vehicle.mileage).toLocaleString("en-US")} mi` : "—"}
           </div>
 
-          <Link to={`/vehicle/${vehicle.id}`} className="btn btn-ghost btn-sm">
-            View details
-          </Link>
+          <div className="d-flex gap-2">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={onAdd}>
+              {addLabel}
+            </button>
+
+            <Link to={`/vehicle/${vehicle.id}`} className="btn btn-ghost btn-sm">
+              {detailsLabel}
+            </Link>
+          </div>
         </div>
       </div>
     </div>
