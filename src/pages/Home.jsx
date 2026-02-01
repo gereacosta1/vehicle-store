@@ -6,7 +6,7 @@ import inventory from "../data/inventory.sample.json";
 export default function Home({ i18n }) {
   const featured = useMemo(() => {
     const set = new Set(inventory.featuredIds || []);
-    return (inventory.vehicles || []).filter((v) => set.has(v.id)).slice(0, 6);
+    return (inventory.vehicles || []).filter(v => set.has(v.id)).slice(0, 6);
   }, []);
 
   const recent = useMemo(() => {
@@ -59,7 +59,7 @@ export default function Home({ i18n }) {
               </div>
               <hr className="hr-soft my-3" />
               <div className="d-flex flex-column gap-2">
-                {featured.slice(0, 4).map((v) => (
+                {featured.slice(0, 4).map(v => (
                   <Link
                     key={v.id}
                     to={`/vehicle/${v.id}`}
@@ -131,6 +131,7 @@ export default function Home({ i18n }) {
                     </div>
                   </div>
                 </div>
+
                 <div className="col-12">
                   <div
                     className="card-dark p-3"
@@ -144,6 +145,7 @@ export default function Home({ i18n }) {
                     </div>
                   </div>
                 </div>
+
                 <div className="col-12">
                   <div
                     className="card-dark p-3"
