@@ -23,15 +23,32 @@
 
 *{ box-sizing: border-box; }
 html, body { height: 100%; }
+
 body{
   margin: 0;
   font-family: var(--font);
   font-size: var(--fs-base);
+  background: var(--bg);
+  color: var(--text);
+  position: relative;
+}
+
+/* Fondo en una capa fija atrás (evita que se “meta” dentro de las cards) */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
   background:
     radial-gradient(1200px 700px at 16% 0%, rgba(184,245,70,.11), transparent 55%),
-    radial-gradient(900px 600px at 86% 10%, rgba(53,63,161,.11), transparent 60%),
-    var(--bg);
-  color: var(--text);
+    radial-gradient(900px 600px at 86% 10%, rgba(53,63,161,.11), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Todo el contenido por arriba del fondo */
+#root{
+  position: relative;
+  z-index: 1;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -42,10 +59,15 @@ a:hover { text-decoration: none; }
 }
 
 .card-dark{
-  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+  background: linear-gradient(
+    180deg,
+    rgba(18,24,33,.92),
+    rgba(15,21,29,.92)
+  );
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  position: relative;
 }
 
 .pill{
@@ -53,7 +75,8 @@ a:hover { text-decoration: none; }
   border-radius: 999px;
   padding: 10px 14px;
   color: var(--muted);
-  background: rgba(255,255,255,.02);
+  background: rgba(18,24,33,.72);
+  position: relative;
 }
 
 .btn-accent{
@@ -67,13 +90,13 @@ a:hover { text-decoration: none; }
 .btn-accent:hover{ filter: brightness(0.96); }
 
 .btn-ghost{
-  background: rgba(255,255,255,.035);
+  background: rgba(18,24,33,.72);
   border: 1px solid rgba(255,255,255,.11);
   color: var(--text);
   border-radius: 999px;
   padding: 11px 16px;
 }
-.btn-ghost:hover{ background: rgba(255,255,255,.06); }
+.btn-ghost:hover{ background: rgba(18,24,33,.84); }
 
 .hr-soft{
   border: 0;
@@ -99,7 +122,7 @@ a:hover { text-decoration: none; }
 }
 
 .input-dark, .select-dark{
-  background: rgba(255,255,255,.03) !important;
+  background: rgba(18,24,33,.72) !important;
   border: 1px solid rgba(255,255,255,.12) !important;
   color: var(--text) !important;
 }
@@ -179,7 +202,6 @@ button:focus-visible{
   .container-narrow{ max-width: 1320px; }
 }
 
-
 @media (prefers-reduced-motion: reduce){
   .hover-raise{ transition: none; }
   .hover-raise:hover{ transform: none; }
@@ -194,7 +216,7 @@ button:focus-visible{
 }
 
 .accordion-button{
-  background: rgba(255,255,255,.02) !important;
+  background: rgba(18,24,33,.72) !important;
   color: var(--text) !important;
   font-weight: 900;
   border: 0 !important;
@@ -203,11 +225,11 @@ button:focus-visible{
 }
 
 .accordion-button.collapsed{
-  background: rgba(255,255,255,.02) !important;
+  background: rgba(18,24,33,.72) !important;
 }
 
 .accordion-button:not(.collapsed){
-  background: rgba(255,255,255,.035) !important;
+  background: rgba(18,24,33,.84) !important;
   color: var(--text) !important;
 }
 
@@ -217,6 +239,12 @@ button:focus-visible{
 }
 
 .accordion-body{
-  background: rgba(255,255,255,.01);
+  background: rgba(18,24,33,.60);
   border-top: 1px solid rgba(255,255,255,.08);
+}
+
+/* Opcional: glass blur sin transparencia fea */
+.card-dark, .pill, .btn-ghost, .input-dark{
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
